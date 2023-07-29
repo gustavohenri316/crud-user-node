@@ -1,12 +1,13 @@
 import { Router } from "express";
-import { CreateUserController } from "../controllers/create-user/create-user";
-import { DeleteUserController } from "../controllers/delete-user/delete-user";
-import { GetUsersController } from "../controllers/get-users/get-users";
-import { UpdateUserController } from "../controllers/update-user/update-user";
-import { MongoCreateUserRepository } from "../repositories/create-user/mongo-create-user";
-import { MongoDeleteUserRepository } from "../repositories/delete-user/mongo-delete-user";
-import { MongoGetUsersRepository } from "../repositories/get-users/mongo-get-users";
-import { MongoUpdateUserRepository } from "../repositories/update-user/mongo-update-user";
+
+import { CreateUserController } from "../controllers/User/create-user/create-user";
+import { DeleteUserController } from "../controllers/User/delete-user/delete-user";
+import { GetUsersController } from "../controllers/User/get-users/get-users";
+import { UpdateUserController } from "../controllers/User/update-user/update-user";
+import { MongoCreateUserRepository } from "../repositories/Users/create-user/mongo-create-user";
+import { MongoDeleteUserRepository } from "../repositories/Users/delete-user/mongo-delete-user";
+import { MongoGetUsersRepository } from "../repositories/Users/get-users/mongo-get-users";
+import { MongoUpdateUserRepository } from "../repositories/Users/update-user/mongo-update-user";
 
 const router = Router();
 

@@ -1,5 +1,6 @@
-import { User } from "../../models/user";
-import { HttpRequest, HttpResponse, IController } from "../protocols";
+import { User } from "../../../models/user";
+import { badRequest, ok, serverError } from "../../helpers";
+import { HttpRequest, HttpResponse, IController } from "../../protocols";
 import { IUpdateUserRepository, UpdateUserParams } from "./protocols";
 
 export class UpdateUserController implements IController {
@@ -7,52 +8,38 @@ export class UpdateUserController implements IController {
 
   async handle(
     httpRequest: HttpRequest<UpdateUserParams>
-  ): Promise<HttpResponse<User>> {
+  ): Promise<HttpResponse<User | string>> {
     try {
       const id = httpRequest?.params?.id;
       const body = httpRequest?.body;
 
       if (!body) {
-        return {
-          statusCode: 400,
-          body: "Body is required",
-        };
+        return badRequest("Missing fields.");
       }
 
       if (!id) {
-        return {
-          statusCode: 400,
-          body: "Id is required",
-        };
+        return badRequest("Missing user id");
       }
+
       const allowedFieldsToUpdate: (keyof UpdateUserParams)[] = [
         "firstName",
         "lastName",
         "password",
       ];
 
-      const someFieldsIsNotAllowedToUpdate = Object.keys(body).some(
+      const someFieldIsNotAllowedToUpdate = Object.keys(body).some(
         (key) => !allowedFieldsToUpdate.includes(key as keyof UpdateUserParams)
       );
 
-      if (someFieldsIsNotAllowedToUpdate) {
-        return {
-          statusCode: 400,
-          body: "Some fields are not allowed to update",
-        };
+      if (someFieldIsNotAllowedToUpdate) {
+        return badRequest("Some received field is not allowed");
       }
 
       const user = await this.updateUserRepository.updateUser(id, body);
 
-      return {
-        statusCode: 200,
-        body: user,
-      };
-    } catch (err) {
-      return {
-        statusCode: 500,
-        body: "Something went wrong.",
-      };
+      return ok<User>(user);
+    } catch (error) {
+      return serverError();
     }
   }
 }
